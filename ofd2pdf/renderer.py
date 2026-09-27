@@ -387,8 +387,10 @@ class PdfRenderer:
                     px, py = apply_matrix(matrix, cursor_x, cursor_y)
                     morph = None
                     if any(abs(glyph[k] - IDENTITY[k]) > 1e-9 for k in range(4)):
+                        # PyMuPDF's morph matrix is the transpose of the usual
+                        # (a b c d) convention, so swap b and c.
                         morph = (fitz.Point(mm2pt(px), mm2pt(py)),
-                                 fitz.Matrix(glyph[0], glyph[1], glyph[2], glyph[3], 0, 0))
+                                 fitz.Matrix(glyph[0], glyph[2], glyph[1], glyph[3], 0, 0))
                     pdf_page.insert_text(
                         (mm2pt(px), mm2pt(py)),
                         character,
