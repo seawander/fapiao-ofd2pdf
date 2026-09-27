@@ -7,15 +7,16 @@
 将 OFD 文档（中国国家标准 GB/T 33190-2016，常用于电子发票、电子证照和公文）转换为 PDF。
 Convert OFD (GB/T 33190-2016) documents to PDF.
 
-**安装体积 / Install size:** 体积几乎都来自依赖，本项目自身只有一个 **40 KB** 的 wheel
-（安装后约 228 KB）。依赖中 PyMuPDF 约 22.8 MB（安装后 56 MB，主要是 MuPDF 原生库），
-fonttools 约 3 MB（安装后 15 MB，且是可选的）。所以全新安装约需下载 **26 MB**、占用
-**71 MB**；**如果你已经装了 PyMuPDF，本项目只增加 40 KB**。
-Nearly all of it is dependency, not this project: the wheel itself is **40 KB**
-(228 KB installed), PyMuPDF is 22.8 MB to download (56 MB on disk, mostly MuPDF's
-native libraries) and fonttools another 3 MB (15 MB, optional). A fresh install
-downloads about **26 MB** and occupies **71 MB**; if PyMuPDF is already there,
-this project adds just 40 KB.
+**安装体积 / Install size:** 体积几乎都来自依赖，本项目自身只有一个 **40 KB** 的安装包
+（pip 下载的 `.whl` 文件，安装后约 228 KB）。依赖中 PyMuPDF 约 22.8 MB
+（安装后 56 MB，主要是 MuPDF 原生库），fonttools 约 3 MB（安装后 15 MB，且是可选的）。
+所以全新安装约需下载 **26 MB**、占用 **71 MB**；**如果你已经装了 PyMuPDF，本项目只增加
+40 KB**。
+Nearly all of it is dependency, not this project: the download itself is **40 KB**
+(a single `.whl` file, 228 KB installed), PyMuPDF is 22.8 MB to fetch (56 MB on
+disk, mostly MuPDF's native libraries) and fonttools another 3 MB (15 MB,
+optional). A fresh install downloads about **26 MB** and occupies **71 MB**; if
+PyMuPDF is already there, this project adds just 40 KB.
 
 - 纯 Python，基于 [PyMuPDF](https://pymupdf.readthedocs.io/)
 - 提供命令行工具和 Python API
