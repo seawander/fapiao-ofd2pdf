@@ -7,6 +7,11 @@
 将 OFD 文档（中国国家标准 GB/T 33190-2016，常用于电子发票、电子证照和公文）转换为 PDF。
 Convert OFD (GB/T 33190-2016) documents to PDF.
 
+**安装体积 / Install size:** 本项目自身的 wheel 仅 **40 KB**（解压后约 228 KB 的代码）；
+连同依赖 PyMuPDF 与 fonttools 一并安装，合计约 **71 MB**。
+The wheel itself is **40 KB** (228 KB of code); with PyMuPDF and fonttools the
+full install comes to roughly **71 MB**.
+
 - 纯 Python，基于 [PyMuPDF](https://pymupdf.readthedocs.io/)
 - 提供命令行工具和 Python API
 - macOS 上双击即可转成 PDF 并直接预览
@@ -88,7 +93,7 @@ ofd2pdf --uninstall-finder-action --purge  # 同时卸载 Python 包
 pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # 安装指定版本
-pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.4.0"
+pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.4.1"
 
 # 需要支持不常见的图像格式时
 pip install "fapiao-ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
@@ -315,7 +320,7 @@ optional.
 pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # a specific release
-pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.4.0"
+pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.4.1"
 
 # with support for uncommon image formats
 pip install "fapiao-ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"

@@ -5,7 +5,10 @@ import pathlib
 import re
 import tempfile
 
-import fitz
+try:  # PyMuPDF >= 1.24.3 is imported as `pymupdf`
+    import pymupdf as fitz
+except ImportError:  # pragma: no cover
+    import fitz
 import pytest
 
 from ofd2pdf import convert, open_pdf

@@ -3,7 +3,10 @@ from __future__ import annotations
 import os
 import plistlib
 
-import fitz
+try:  # PyMuPDF >= 1.24.3 is imported as `pymupdf`
+    import pymupdf as fitz
+except ImportError:  # pragma: no cover
+    import fitz
 import pytest
 
 from ofd2pdf import convert, macos

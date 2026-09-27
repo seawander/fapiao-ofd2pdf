@@ -13,7 +13,7 @@ from . import macos
 from .converter import convert, convert_bytes, open_pdf
 from .exceptions import OfdError, OfdFormatError, OfdNotFoundError
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 
 __all__ = [
     "convert",

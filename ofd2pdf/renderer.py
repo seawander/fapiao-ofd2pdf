@@ -5,7 +5,10 @@ from __future__ import annotations
 import math
 from typing import Dict, List, Optional, Tuple
 
-import fitz
+try:  # PyMuPDF >= 1.24.3 is imported as `pymupdf`; `fitz` is deprecated
+    import pymupdf as fitz
+except ImportError:  # pragma: no cover - older PyMuPDF releases
+    import fitz
 
 from .container import OfdPackage
 from .fonts import FontRegistry, RegisteredFont
