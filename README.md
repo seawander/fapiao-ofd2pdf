@@ -83,7 +83,7 @@ ofd2pdf --uninstall-finder-action --purge  # 同时卸载 Python 包
 pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # 安装指定版本
-pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.2.0"
+pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.3.0"
 
 # 需要支持不常见的图像格式时
 pip install "ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
@@ -294,7 +294,7 @@ optional.
 pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # a specific release
-pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.2.0"
+pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.3.0"
 
 # with support for uncommon image formats
 pip install "ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
