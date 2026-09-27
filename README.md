@@ -171,7 +171,8 @@ OFD 文档通常引用中文字体（宋体/SimSun、黑体/SimHei、楷体/KaiT
 1. 内嵌字体文件（`<ofd:FontFile>`），优先使用；
 2. 通过 `FontName`/`FamilyName` 别名匹配到的系统字体（Songti、STHeiti、
    Courier New、Times New Roman 等）；
-3. 中文文本使用内置 CJK 字体，纯拉丁文本使用基础 14 号字体。
+3. 中文文本优先使用常规字重的系统 CJK 字体（找不到时才用内置 CJK 字体），
+   纯拉丁文本使用基础 14 号字体。
 
 ### 限制
 
@@ -384,7 +385,8 @@ OFD documents usually reference Chinese fonts (宋体/SimSun, 黑体/SimHei,
 1. an embedded font file (`<ofd:FontFile>`), used first;
 2. a matching system font, by `FontName`/`FamilyName` aliases (Songti, STHeiti,
    Courier New, Times New Roman, …);
-3. a built-in CJK font for CJK text, or a base-14 font for Latin-only text.
+3. a regular-weight system CJK font for CJK text (falling back to the built-in
+   CJK font), or a base-14 font for Latin-only text.
 
 ### Limitations
 

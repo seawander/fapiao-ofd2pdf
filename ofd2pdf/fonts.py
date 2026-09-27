@@ -19,6 +19,20 @@ from .model import Document, FontRes
 
 CJK_BUILTIN = "china-s"
 
+# Regular-weight CJK fonts to prefer when a referenced font is not installed.
+# PyMuPDF's built-in CJK font renders noticeably heavy, so we look for a normal
+# system font first and only fall back to the built-in one as a last resort.
+CJK_FALLBACK_FONTS = [
+    "PingFang SC",
+    "STHeiti Light",
+    "Heiti SC",
+    "Songti SC",
+    "Songti",
+    "Hiragino Sans GB",
+    "Noto Sans CJK SC",
+    "Source Han Sans SC",
+]
+
 _FONT_DIRS = (
     "/System/Library/Fonts",
     "/System/Library/Fonts/Supplemental",
@@ -187,6 +201,12 @@ class FontRegistry:
 
     def _fallback(self, text: str) -> RegisteredFont:
         if has_cjk(text):
+            path = self._system.find(CJK_FALLBACK_FONTS)
+            if path:
+                if path not in self._cache:
+                    self._cache[path] = RegisteredFont(
+                        key="system:" + path, fontfile=path)
+                return self._cache[path]
             key = "builtin:" + CJK_BUILTIN
             if key not in self._cache:
                 self._cache[key] = RegisteredFont(key=key, builtin=CJK_BUILTIN)
