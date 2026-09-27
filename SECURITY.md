@@ -21,7 +21,7 @@ Please **do not** open a public issue for security problems. Instead:
 
 - open a private advisory via GitHub:
   <https://github.com/seawander/fapiao-ofd2pdf/security/advisories/new>;
-- or email **REMOVED**.
+- or email REMOVED.
 
 Include steps to reproduce, affected version/commit, and impact. Please give a
 reasonable amount of time to respond before any public disclosure.
