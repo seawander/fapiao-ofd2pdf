@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Tests / tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local artifacts
+*.pdf
+.DS_Store
+
+# Keep personal OFD files out of the repo; the fixture lives in tests/data/
+/*.ofd

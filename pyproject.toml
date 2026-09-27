@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ofd2pdf"
+version = "0.2.0"
+description = "Convert OFD (GB/T 33190) documents to PDF."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "ofd2pdf contributors" }]
+keywords = ["ofd", "pdf", "converter", "gb-t-33190"]
+dependencies = ["pymupdf>=1.24"]
+
+[project.optional-dependencies]
+image = ["Pillow>=9"]
+dev = ["pytest>=7"]
+
+[project.scripts]
+ofd2pdf = "ofd2pdf.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["ofd2pdf*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
