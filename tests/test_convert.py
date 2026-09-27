@@ -25,12 +25,15 @@ def test_convert_sample(tmp_path):
         assert page.rect.width == pytest.approx(150 * 72 / 25.4, abs=0.5)
         assert page.rect.height == pytest.approx(80 * 72 / 25.4, abs=0.5)
 
+        # Glyphs are positioned individually, so some extractors insert spaces
+        # between them; compare with whitespace removed.
         text = page.get_text()
-        assert "测试发票" in text
-        assert "OFD TEST" in text
-        assert "TEST USER" in text
-        assert "INV000000001" in text
-        assert "CNY 123.45" in text
+        compact = "".join(text.split())
+        assert "测试发票" in compact
+        assert "OFDTEST" in compact
+        assert "TESTUSER" in compact
+        assert "INV000000001" in compact
+        assert "CNY123.45" in compact
     finally:
         pdf.close()
 
