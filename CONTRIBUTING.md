@@ -1,8 +1,8 @@
 # Contributing
 
 Thanks for your interest! This project was generated with **AI assistance**
-([OpenCode](https://opencode.ai) + DeepSeek V4.1 Flash) and is provided as-is,
-with no warranty (see the README disclaimer). Bug reports, fixes and
+([OpenCode](https://opencode.ai), using DeepSeek V4.1 Flash and Space Bunny Free)
+and is provided as-is, with no warranty (see the README disclaimer). Bug reports, fixes and
 small, focused improvements are very welcome.
 
 ## Development setup

@@ -15,13 +15,13 @@ Convert OFD (GB/T 33190-2016) documents to PDF.
 
 ## ⚠️ 免责声明 / Disclaimer
 
-> 本项目由 AI 辅助生成（使用 [OpenCode](https://opencode.ai) 与 DeepSeek V4.1 Flash 模型），未经专业审计或全面测试。
+> 本项目由 AI 辅助生成（使用 [OpenCode](https://opencode.ai)，模型为 DeepSeek V4.1 Flash 与 Space Bunny Free），未经专业审计或全面测试。
 > 软件按「原样」提供，不提供任何明示或暗示的保证——包括但不限于正确性、完整性、
 > 适用性或安全性。请自行核对转换结果，尤其是发票、公文等具有法律或财务效力的文件。
 > 使用本软件所产生的任何风险与损失，由使用者自行承担。本项目与 OFD 标准的任何
 > 标准组织或厂商均无关联。
 >
-> This project was generated with AI ([OpenCode](https://opencode.ai) + DeepSeek V4.1 Flash) and has not
+> This project was generated with AI ([OpenCode](https://opencode.ai), using DeepSeek V4.1 Flash and Space Bunny Free) and has not
 > been professionally audited or exhaustively tested. It is provided "as is", without warranty of any kind,
 > express or implied — including correctness, completeness, fitness or security.
 > Verify the output yourself, especially for invoices or official documents that
@@ -233,7 +233,7 @@ ofd2pdf/
 
 ### 许可证
 
-MIT。本项目由 AI 辅助生成（OpenCode + DeepSeek V4.1 Flash），未经专业审计或全面测试，按「原样」提供，不附带任何保证。
+MIT。本项目由 AI 辅助生成（OpenCode，模型为 DeepSeek V4.1 Flash 与 Space Bunny Free），未经专业审计或全面测试，按「原样」提供，不附带任何保证。
 请自行验证转换结果；对因使用本软件造成的任何损失不承担责任。详见文首的「免责声明」。
 
 ---
@@ -454,7 +454,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines and
 
 ### License
 
-MIT. This project was generated with AI (OpenCode + DeepSeek V4.1 Flash), has not
+MIT. This project was generated with AI (OpenCode, using DeepSeek V4.1 Flash and Space Bunny Free), has not
 been professionally audited or exhaustively tested, and is provided "as is"
 without warranty of any kind. Verify the output yourself; the authors accept no liability for any loss
 arising from its use. See the Disclaimer at the top of this document.
