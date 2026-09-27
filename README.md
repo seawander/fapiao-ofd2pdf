@@ -220,6 +220,8 @@ ofd2pdf/
 > 测试样本由脚本从零生成（假发票、合成图像、无真实数据）。可随时运行
 > `python tests/make_sample.py` 重新生成。
 
+贡献指南见 [CONTRIBUTING.md](CONTRIBUTING.md)，安全问题请按 [SECURITY.md](SECURITY.md) 反馈。
+
 ### 许可证
 
 MIT。本项目由 AI 辅助生成（OpenCode + DeepSeek V4.1 Flash），未经专业审计或全面测试，按「原样」提供，不附带任何保证。
@@ -423,6 +425,9 @@ ofd2pdf/
 
 > The test fixture is generated from scratch (fake invoice, synthetic image,
 > no real data). Regenerate it any time with `python tests/make_sample.py`.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines and
+[SECURITY.md](SECURITY.md) to report a vulnerability.
 
 ### License
 
