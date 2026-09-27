@@ -38,8 +38,7 @@ ofd2pdf 可以把 OFD 文件转换为 PDF。发票、行程单等常常以 OFD �
 这些文件又往往涉及个人隐私，你多半不愿意把它们上传到任何在线转换网站。ofd2pdf 完全
 在本地运行：文件不离开你的电脑，不联网，也没有上传界面。
 
-大多数情况下，你只想打开一个 OFD 文件看看内容或打印出来——在 macOS 上无需敲命令，
-在访达里双击即可。
+有了 fapiao-ofd2pdf，在 macOS 上无需敲命令，双击即可。
 
 [安装](#安装) · [命令行](#命令行) · [Python API](#python-api)
 
@@ -261,8 +260,7 @@ Those files are usually private as well, and you probably do not want to upload
 them to any online converter. ofd2pdf runs entirely on your own machine: nothing
 leaves the computer, there is no network access, and no upload form anywhere.
 
-Most of the time you just want to open an OFD to look at it, or to print it — on
-macOS that is a double-click in Finder, no commands needed.
+With fapiao-ofd2pdf, a double-click is all it takes on macOS — no commands needed.
 
 [Installation](#installation) · [Command line](#command-line) · [Python API](#python-api)
 
