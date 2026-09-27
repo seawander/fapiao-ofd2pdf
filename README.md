@@ -9,7 +9,7 @@ Convert OFD (GB/T 33190-2016) documents to PDF.
 
 - 纯 Python，基于 [PyMuPDF](https://pymupdf.readthedocs.io/)
 - 提供命令行工具和 Python API
-- macOS 上可右键直接以 PDF 打开
+- macOS 上双击即可转成 PDF 并直接预览
 
 [中文](#中文) | [English](#english)
 
@@ -32,12 +32,18 @@ Convert OFD (GB/T 33190-2016) documents to PDF.
 
 ## 中文
 
-ofd2pdf 可以把 OFD 文件转换为 PDF。大多数情况下，你只想打开一个 OFD
-文件——在 macOS 上无需敲命令，直接在访达里右键即可。
+ofd2pdf 可以把 OFD 文件转换为 PDF。发票、报销单、证照等常常以 OFD 下发，但很多单位
+只收 PDF——打印报销时，没有 PDF 就很麻烦。
+
+另一方面，发票和身份证件属于个人隐私，你多半不愿意把它们上传到任何在线转换网站。
+ofd2pdf 完全在本地运行：文件不离开你的电脑，不联网，也没有上传界面。
+
+大多数情况下，你只想打开一个 OFD 文件看看内容或打印出来——在 macOS 上无需敲命令，
+在访达里双击即可。
 
 [安装](#安装) · [命令行](#命令行) · [Python API](#python-api)
 
-### 在访达中右键打开（macOS，最简单）
+### 在访达中双击打开（macOS，最简单）
 
 1. 安装一次：
 
@@ -46,11 +52,11 @@ ofd2pdf 可以把 OFD 文件转换为 PDF。大多数情况下，你只想打开
    ofd2pdf --install-finder-action
    ```
 
-2. 在访达中右键点击 `.ofd` 文件 → 打开方式 → OFD to PDF。
+2. 在访达中双击 `.ofd` 文件。
 
-PDF 会立即在查看器中打开，且不会在源文件旁另存文件。首次使用时，「OFD to PDF」可能
-藏在 打开方式 → 其他… 里，选择一次即可常驻菜单。若希望双击就打开，可在
-显示简介 → 打开方式 → 全部更改… 中设为默认。
+PDF 会立即在查看器中打开，且不会在源文件旁另存文件。若双击打开的还是别的应用，
+只需设置一次：右键点击 `.ofd` 文件 → 打开方式 → OFD to PDF（首次可能藏在
+打开方式 → 其他… 里），选中一次即成为默认，之后双击即可。
 
 如果 macOS 提示 *「Apple 无法验证……是否包含恶意软件」*，这是 Gatekeeper 在检查
 从网上下载的（带有隔离标记的）`.ofd` 文件。本工具的处理应用没有 Apple 公证
@@ -97,7 +103,7 @@ pip install .
 以上任一方式都会安装 `ofd2pdf` 命令。
 
 > macOS 提示： 访达集成会启动 `/Applications` 下的应用，而 macOS 会阻止它读取
-> 位于 `~/Documents` 下的*可编辑（editable）*安装。使用右键集成时请用 `pip install .`
+> 位于 `~/Documents` 下的*可编辑（editable）*安装。使用访达集成时请用 `pip install .`
 > （而不是 `pip install -e .`），修改源码后重新安装一次。
 
 ### 命令行
@@ -118,7 +124,7 @@ python -m ofd2pdf invoice.ofd            # 以模块方式运行
 | `--open` | 用默认查看器打开 PDF，不在源文件旁保存 |
 | `--clear-quarantine` | 清除指定文件/文件夹的 macOS 隔离（quarantine）标记 |
 | `--version` | 显示版本号 |
-| `--install-finder-action`、`--install` | 安装 macOS 右键集成 |
+| `--install-finder-action`、`--install` | 安装 macOS 访达集成（双击打开） |
 | `--uninstall-finder-action`、`--uninstall` | 移除 macOS 集成 |
 | `--purge` | 配合 `--uninstall`，同时卸载 Python 包 |
 
@@ -240,12 +246,21 @@ MIT。本项目由 AI 辅助生成（OpenCode，模型为 DeepSeek V4.1 Flash �
 
 ## English
 
-ofd2pdf converts OFD files to PDF. Most of the time you just want to
-open an OFD — on macOS you can do that from Finder, no commands needed.
+ofd2pdf converts OFD files to PDF. Invoices, expense claims and licences are
+often issued as OFD, while many organisations only accept PDF — without one,
+printing for reimbursement is a hassle.
+
+At the same time, invoices and ID documents are private, and you probably do not
+want to upload them to any online converter. ofd2pdf runs entirely on your own
+machine: nothing leaves the computer, there is no network access, and no upload
+form anywhere.
+
+Most of the time you just want to open an OFD to look at it, or to print it — on
+macOS that is a double-click in Finder, no commands needed.
 
 [Installation](#installation) · [Command line](#command-line) · [Python API](#python-api)
 
-### Open from Finder (macOS — easiest)
+### Open from Finder with a double-click (macOS — easiest)
 
 1. Install once:
 
@@ -254,12 +269,12 @@ open an OFD — on macOS you can do that from Finder, no commands needed.
    ofd2pdf --install-finder-action
    ```
 
-2. Right-click an `.ofd` file in Finder → Open With → OFD to PDF.
+2. Double-click an `.ofd` file in Finder.
 
 The PDF opens straight away in your viewer and is not saved next to the source.
-The first time, "OFD to PDF" may be under Open With → Other…; pick it once and
-it stays on the menu. To open on double-click, use
-Get Info → Open with → Change All….
+If a double-click opens a different app, set the default once: right-click the
+`.ofd` file → Open With → OFD to PDF (the first time it may be under
+Open With → Other…). After that, double-click is all it takes.
 
 If macOS says *"Apple could not verify … is free of malware"*, that is Gatekeeper
 checking a downloaded `.ofd` (one carrying the quarantine flag). This tool's
@@ -331,7 +346,7 @@ python -m ofd2pdf invoice.ofd            # run as a module
 | `--open` | Open the PDF in the default viewer without saving it next to the source |
 | `--clear-quarantine` | Remove the macOS quarantine flag from the given files/folders |
 | `--version` | Print the version |
-| `--install-finder-action`, `--install` | Install the macOS right-click integration |
+| `--install-finder-action`, `--install` | Install the macOS Finder integration (double-click to open) |
 | `--uninstall-finder-action`, `--uninstall` | Remove the macOS integration |
 | `--purge` | With `--uninstall`, also uninstall the Python package |
 
