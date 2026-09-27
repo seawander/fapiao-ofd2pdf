@@ -332,9 +332,6 @@ class PdfRenderer:
         char_direction = obj.char_direction % 360
         theta = math.radians(char_direction)
         cos_theta, sin_theta = math.cos(theta), math.sin(theta)
-        rot_scale = (cos_theta * hscale, sin_theta * hscale,
-                     -sin_theta, cos_theta, 0.0, 0.0)
-
         read_phi = math.radians(obj.read_direction)
         cos_read, sin_read = math.cos(read_phi), math.sin(read_phi)
         metric_font = _metrics_font(font)
@@ -344,9 +341,7 @@ class PdfRenderer:
         # transform), not just their positions -- otherwise a scaling CTM leaves
         # the advances scaled but the glyphs full width, so they overlap.
         linear = (matrix[0], matrix[1], matrix[2], matrix[3], 0.0, 0.0)
-        glyph = compose(linear, rot_scale)
-        use_morph = any(abs(glyph[i] - IDENTITY[i]) > 1e-9 for i in range(4))
-        morph_matrix = fitz.Matrix(glyph[0], glyph[1], glyph[2], glyph[3], 0, 0)
+
         for code in obj.codes:
             has_delta = bool(code.delta_x) or bool(code.delta_y)
             cursor_x = code.x
@@ -354,11 +349,41 @@ class PdfRenderer:
             advance_x = code.delta_x[-1] if code.delta_x else 0.0
             advance_y = code.delta_y[-1] if code.delta_y else 0.0
             for i, character in enumerate(code.text):
-                px, py = apply_matrix(matrix, cursor_x, cursor_y)
+                natural_mm = None
+                if metric_font is not None:
+                    try:
+                        natural_mm = metric_font.text_length(
+                            character, fontsize=fontsize) / MM2PT
+                    except Exception:
+                        natural_mm = None
+
+                if has_delta:
+                    step_x = code.delta_x[i] if i < len(code.delta_x) else advance_x
+                    step_y = code.delta_y[i] if i < len(code.delta_y) else advance_y
+                elif natural_mm is not None:
+                    step_x = natural_mm * cos_read * hscale
+                    step_y = natural_mm * sin_read
+                else:
+                    advance_mm = fontsize / MM2PT
+                    step_x = advance_mm * cos_read * hscale
+                    step_y = advance_mm * sin_read
+
                 if character not in (" ", "\u3000"):
+                    # Compress a glyph whose natural width exceeds the advance the
+                    # document gives it (e.g. proportional Latin in a CJK font asked
+                    # to be half width), so glyphs never overlap.
+                    fit = 1.0
+                    if (natural_mm and abs(step_x) > 1e-9
+                            and natural_mm > abs(step_x) * 1.001):
+                        fit = abs(step_x) / natural_mm
+                    glyph = compose(linear, (cos_theta * hscale * fit,
+                                             sin_theta * hscale * fit,
+                                             -sin_theta, cos_theta, 0.0, 0.0))
+                    px, py = apply_matrix(matrix, cursor_x, cursor_y)
                     morph = None
-                    if use_morph:
-                        morph = (fitz.Point(mm2pt(px), mm2pt(py)), morph_matrix)
+                    if any(abs(glyph[k] - IDENTITY[k]) > 1e-9 for k in range(4)):
+                        morph = (fitz.Point(mm2pt(px), mm2pt(py)),
+                                 fitz.Matrix(glyph[0], glyph[1], glyph[2], glyph[3], 0, 0))
                     pdf_page.insert_text(
                         (mm2pt(px), mm2pt(py)),
                         character,
@@ -371,19 +396,6 @@ class PdfRenderer:
                         stroke_opacity=_stroke.alpha if _stroke else 1.0,
                         morph=morph,
                     )
-                if has_delta:
-                    step_x = code.delta_x[i] if i < len(code.delta_x) else advance_x
-                    step_y = code.delta_y[i] if i < len(code.delta_y) else advance_y
-                else:
-                    advance = fontsize
-                    if metric_font is not None:
-                        try:
-                            advance = metric_font.text_length(character, fontsize=fontsize)
-                        except Exception:
-                            advance = fontsize
-                    advance_mm = advance / MM2PT
-                    step_x = advance_mm * cos_read * hscale
-                    step_y = advance_mm * sin_read
                 cursor_x += step_x
                 cursor_y += step_y
 
