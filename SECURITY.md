@@ -17,11 +17,13 @@ Only the latest `main` branch (and the most recent release tag) is supported.
 
 ## Reporting a vulnerability
 
-Please **do not** open a public issue for security problems. Instead:
-
 - open a private advisory via GitHub:
   <https://github.com/seawander/fapiao-ofd2pdf/security/advisories/new>;
-- or email REMOVED.
+- or open an issue at
+  <https://github.com/seawander/fapiao-ofd2pdf/issues> — this is fine for
+  low-risk findings and for anything you are happy to discuss in public. For
+  anything exploitable, please use the private advisory above and say so in
+  the issue, or wait until a fix is released.
 
 Include steps to reproduce, affected version/commit, and impact. Please give a
 reasonable amount of time to respond before any public disclosure.
