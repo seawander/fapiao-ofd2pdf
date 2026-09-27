@@ -55,13 +55,18 @@ PDF 会立即在查看器中打开，且不会在源文件旁另存文件。首�
 藏在 **打开方式 → 其他…** 里，选择一次即可常驻菜单。若希望双击就打开，可在
 **显示简介 → 打开方式 → 全部更改…** 中设为默认。
 
-如果 macOS 提示 *「Apple 无法验证……是否包含恶意软件」*，说明该文件是从网上下载的
-（带有隔离标记）。清除一次即可不再提示：
+如果 macOS 提示 *「Apple 无法验证……是否包含恶意软件」*，这是 Gatekeeper 在检查
+**从网上下载的**（带有隔离标记的）`.ofd` 文件。本工具的处理应用没有 Apple 公证
+（notarization），因此这类文件会被拦下。清除文件的隔离标记即可不再提示：
 
 ```bash
-ofd2pdf --clear-quarantine ~/Documents/invoices   # 文件夹……
+ofd2pdf --clear-quarantine ~/Documents/invoices   # 文件夹（含子目录）……
 ofd2pdf --clear-quarantine invoice.ofd            # 或单个文件
 ```
+
+此命令等价于 `xattr -dr com.apple.quarantine <路径>`。之后新下载的文件会再次带有该
+标记，需要再执行一次；或者改用命令行转换（`ofd2pdf invoice.ofd --open`），命令行
+不会触发此提示。该对话框本身无危害，点「完成」关闭即可。
 
 卸载集成：
 
@@ -252,14 +257,20 @@ The first time, "OFD to PDF" may be under **Open With → Other…**; pick it on
 it stays on the menu. To open on double-click, use
 **Get Info → Open with → Change All…**.
 
-If macOS says *"Apple could not verify … is free of malware"*, the file was
-downloaded from the internet (it carries a quarantine flag). Clear it once and
-the warning stops:
+If macOS says *"Apple could not verify … is free of malware"*, that is Gatekeeper
+checking a **downloaded** `.ofd` (one carrying the quarantine flag). This tool's
+helper app is not notarized by Apple, so such files are refused. Clear the flag
+and the warning stops:
 
 ```bash
-ofd2pdf --clear-quarantine ~/Documents/invoices   # a folder…
+ofd2pdf --clear-quarantine ~/Documents/invoices   # a folder (recursive)…
 ofd2pdf --clear-quarantine invoice.ofd            # …or a single file
 ```
+
+This is equivalent to `xattr -dr com.apple.quarantine <path>`. Newly downloaded
+files get the flag again, so re-run it (or convert from the command line with
+`ofd2pdf invoice.ofd --open`, which never triggers the prompt). The dialog itself
+is harmless; dismiss it with **Done**.
 
 Uninstall the integration:
 
