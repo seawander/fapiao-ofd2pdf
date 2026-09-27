@@ -26,6 +26,23 @@ def _document(layer: Layer) -> Document:
     return document
 
 
+def test_ttc_uses_regular_face():
+    from ofd2pdf import fonts as fonts_module
+
+    path = "/System/Library/Fonts/Supplemental/Songti.ttc"
+    if not os.path.exists(path):
+        pytest.skip("Songti.ttc not available")
+    pytest.importorskip("fontTools.ttLib")
+    from fontTools.ttLib import TTFont
+
+    resolved = fonts_module._extract_regular_face(path)
+    assert resolved != path
+    face = (TTFont(resolved, lazy=True)["name"].getDebugName(4) or "").lower()
+    assert "black" not in face
+    assert "bold" not in face
+    assert "medium" not in face
+
+
 def test_parse_delta_array_g_repeat():
     from ofd2pdf.parser import parse_delta_array
 

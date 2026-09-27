@@ -9,8 +9,11 @@ Resolution order for a given OFD ``Font``:
 
 from __future__ import annotations
 
+import hashlib
+import io
 import os
 import re
+import tempfile
 from dataclasses import dataclass
 from typing import Dict, Iterable, List, Optional
 
@@ -111,6 +114,67 @@ def _weight_penalty(name: str) -> int:
     return 1 if any(weight in name for weight in _HEAVY_WEIGHTS) else 0
 
 
+def _extract_regular_face(path: Optional[str]) -> Optional[str]:
+    """Return a standalone regular-weight face of a TTC/OTC collection.
+
+    MuPDF loads only the first face of a TrueType collection; for Songti that
+    first face is "Black" (very bold).  When fontTools is available we extract
+    the best (regular/light) face to a cached file and return that path.
+    """
+
+    if not path or not path.lower().endswith((".ttc", ".otc")):
+        return path
+    try:
+        from fontTools.ttLib import TTCollection
+    except Exception:
+        return path
+    try:
+        faces = TTCollection(path, lazy=True).fonts
+    except Exception:
+        return path
+    if len(faces) <= 1:
+        return path
+
+    def score(font):
+        name = font["name"]
+        text = " ".join(filter(None, (name.getDebugName(2),
+                                      name.getDebugName(4)))).lower()
+        if "black" in text:
+            weight = 4
+        elif "bold" in text or "medium" in text or "heavy" in text:
+            weight = 3
+        elif "light" in text:
+            weight = 1
+        else:
+            weight = 0  # regular or unspecified
+        if "tc" in text or "traditional" in text:
+            script = 2
+        elif "sc" in text or "simplified" in text:
+            script = 0
+        else:
+            script = 1
+        return (weight, script)
+
+    chosen = min(faces, key=score)
+    label = chosen["name"].getDebugName(4) or "face"
+    key = hashlib.sha1(f"{path}|{label}".encode("utf-8")).hexdigest()[:16]
+    cache_dir = os.path.join(tempfile.gettempdir(), "ofd2pdf-fonts")
+    try:
+        os.makedirs(cache_dir, exist_ok=True)
+    except OSError:
+        return path
+    output = os.path.join(cache_dir, key + ".ttf")
+    if not os.path.exists(output):
+        try:
+            buffer = io.BytesIO()
+            chosen.save(buffer)
+            with open(output, "wb") as stream:
+                stream.write(buffer.getvalue())
+        except Exception:
+            return path
+    return output
+
+
 @dataclass
 class RegisteredFont:
     """A concrete font ready to be handed to MuPDF."""
@@ -204,7 +268,7 @@ class FontRegistry:
             candidates.extend(FONT_ALIASES.get(raw.strip().lower(), [raw]))
         if not candidates:
             return None
-        path = self._system.find(candidates)
+        path = _extract_regular_face(self._system.find(candidates))
         if not path:
             return None
         if path in self._cache:
@@ -215,7 +279,7 @@ class FontRegistry:
 
     def _fallback(self, text: str) -> RegisteredFont:
         if has_cjk(text):
-            path = self._system.find(CJK_FALLBACK_FONTS)
+            path = _extract_regular_face(self._system.find(CJK_FALLBACK_FONTS))
             if path:
                 if path not in self._cache:
                     self._cache[path] = RegisteredFont(
