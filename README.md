@@ -83,7 +83,7 @@ ofd2pdf --uninstall-finder-action --purge  # 同时卸载 Python 包
 pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # 安装指定版本
-pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.3.0"
+pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.3.1"
 
 # 需要支持不常见的图像格式时
 pip install "ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
@@ -157,7 +157,8 @@ with OfdPackage("invoice.ofd") as package:
   `\XXXX` 转义）逐字定位，并支持 `HScale` 与 `ReadDirection` / `CharDirection`
   实现旋转和竖排
 - `PathObject`——完整的路径缩写指令 `S / M / L / Q / B / A / C`（含椭圆弧）
-- `ImageObject` 以及可递归的 `CompositeObject`
+- `ImageObject` 以及可递归的 `CompositeObject`（含通过 `ResourceID` 引用的
+  `CompositeGraphicUnit` 复合图形单元，例如发票监制章）
 - 页面模板（`Background` / `Foreground` 前后层序）
 - 注释外观内容（自带绘制内容的图章/签章）
 - 填充/描边颜色（`gray` / `rgb` / `cmyk`）、透明度、线端/连接样式、虚线以及
@@ -294,7 +295,7 @@ optional.
 pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # a specific release
-pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.3.0"
+pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.3.1"
 
 # with support for uncommon image formats
 pip install "ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
@@ -373,6 +374,8 @@ with OfdPackage("invoice.ofd") as package:
 - `ImageObject` and recursive `CompositeObject`
 - Page templates (`Background` / `Foreground` z-order)
 - Annotation appearance content (stamps/signatures with drawn appearances)
+- `CompositeGraphicUnit` resources referenced by `ResourceID` (e.g. the red
+  invoice supervision seal)
 - Fill/stroke colours (`gray` / `rgb` / `cmyk`), alpha, line caps/joins, dashes
   and `DrawParam` inheritance
 - Document metadata and embedded attachments

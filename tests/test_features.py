@@ -6,7 +6,7 @@ import plistlib
 import fitz
 import pytest
 
-from ofd2pdf import macos
+from ofd2pdf import convert, macos
 from ofd2pdf.model import (Annotation, Document, DrawParam, Layer, Page,
                            PathObject, TextCode, TextObject, Color)
 from ofd2pdf.renderer import render_to_pdf
@@ -54,6 +54,60 @@ def test_parse_delta_array_g_repeat():
     assert parse_delta_array("1.59 g 6 3.18 1.59 g 3 3.18") == [
         1.59, 3.18, 3.18, 3.18, 3.18, 3.18, 3.18, 1.59, 3.18, 3.18, 3.18,
     ]
+
+
+def test_composite_graphic_unit_is_expanded(tmp_path):
+    """A CompositeObject that points at a unit resource must be rendered."""
+    import zipfile
+
+    ns = "http://www.ofdspec.org/2016"
+    ofd = tmp_path / "seal.ofd"
+    with zipfile.ZipFile(ofd, "w") as zf:
+        zf.writestr("OFD.xml", f'<?xml version="1.0" encoding="UTF-8"?>'
+                                f'<ofd:OFD xmlns:ofd="{ns}" Version="1.0">'
+                                f'<ofd:DocBody><ofd:DocInfo><ofd:DocID>1</ofd:DocID>'
+                                f'</ofd:DocInfo><ofd:DocRoot>Doc_0/Document.xml'
+                                f'</ofd:DocRoot></ofd:DocBody></ofd:OFD>')
+        zf.writestr("Doc_0/Document.xml", f'<?xml version="1.0" encoding="UTF-8"?>'
+                                          f'<ofd:Document xmlns:ofd="{ns}"><ofd:CommonData>'
+                                          f'<ofd:DocumentRes>DocumentRes.xml</ofd:DocumentRes>'
+                                          f'<ofd:MaxUnitID>99</ofd:MaxUnitID>'
+                                          f'<ofd:PageArea><ofd:PhysicalBox>0 0 210 297'
+                                          f'</ofd:PhysicalBox></ofd:PageArea></ofd:CommonData>'
+                                          f'<ofd:Pages><ofd:Page ID="1" BaseLoc="Pages/Page_0/Content.xml"/>'
+                                          f'</ofd:Pages></ofd:Document>')
+        zf.writestr("Doc_0/DocumentRes.xml", f'<?xml version="1.0" encoding="UTF-8"?>'
+                                             f'<ofd:Res xmlns:ofd="{ns}"><ofd:CompositeGraphicUnits>'
+                                             f'<ofd:CompositeGraphicUnit ID="1111" Width="210" Height="297">'
+                                             f'<ofd:Content ID="1005" Type="Body"><ofd:PageBlock ID="1006">'
+                                             f'<ofd:PathObject ID="3" Boundary="0 0 30 20" LineWidth="1" '
+                                             f'Stroke="true" Fill="false">'
+                                             f'<ofd:StrokeColor ColorSpace="4" Value="255 0 0"/>'
+                                             f'<ofd:AbbreviatedData>M 15 0 B 30 10 15 20 0 10 C</ofd:AbbreviatedData>'
+                                             f'</ofd:PathObject></ofd:PageBlock></ofd:Content>'
+                                             f'</ofd:CompositeGraphicUnit></ofd:CompositeGraphicUnits></ofd:Res>')
+        zf.writestr("Doc_0/Pages/Page_0/Content.xml", f'<?xml version="1.0" encoding="UTF-8"?>'
+                                                     f'<ofd:Page xmlns:ofd="{ns}"><ofd:Area>'
+                                                     f'<ofd:PhysicalBox>0 0 210 297</ofd:PhysicalBox></ofd:Area>'
+                                                     f'<ofd:Content><ofd:Layer ID="7" Type="Body">'
+                                                     f'<ofd:CompositeObject ID="1001" Boundary="90 4 30 20" '
+                                                     f'ResourceID="1111"/>'
+                                                     f'</ofd:Layer></ofd:Content></ofd:Page>')
+
+    output = tmp_path / "seal.pdf"
+    convert(ofd, output)
+    pdf = fitz.open(output)
+    try:
+        drawings = pdf[0].get_drawings()
+        assert drawings, "composite unit content should be drawn"
+        rect = drawings[0]["rect"]
+        # The unit is placed at the referencing object's boundary origin.
+        assert rect.x0 == pytest.approx(90 * 72 / 25.4, abs=1.0)
+        assert rect.y0 == pytest.approx(4 * 72 / 25.4, abs=1.0)
+        assert rect.width == pytest.approx(30 * 72 / 25.4, abs=1.0)
+        assert rect.height == pytest.approx(20 * 72 / 25.4, abs=1.0)
+    finally:
+        pdf.close()
 
 
 def test_text_directions_and_hscale_render():

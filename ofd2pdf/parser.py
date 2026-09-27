@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import copy
 import posixpath
 import re
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 from xml.etree import ElementTree as ET
 
 from .container import (OfdPackage, child, children, descendants, local_name,
@@ -187,7 +188,41 @@ class OfdParser:
             entry = resolve_loc(document_dir, attachments.text)
             if self.pkg.has(entry):
                 self._parse_attachments(entry)
+        self._resolve_composites()
         return self.doc
+
+    def _resolve_composites(self) -> None:
+        """Fill in composite objects that reference a composite graphic unit.
+
+        A ``CompositeObject`` may either nest its content inline or point at a
+        ``CompositeGraphicUnit`` resource with ``ResourceID``.  Units live in the
+        resource files, so they are expanded once the whole document is known.
+        """
+        if not self.doc.composite_units:
+            return
+        for page in list(self.doc.pages) + list(self.doc.templates.values()):
+            for layer in page.layers:
+                layer.objects = self._expand_composites(layer.objects)
+            for annotation in page.annotations:
+                annotation.objects = self._expand_composites(annotation.objects)
+
+    def _expand_composites(self, objects: List[GraphicObject],
+                           seen: Optional[set] = None) -> List[GraphicObject]:
+        if seen is None:
+            seen = set()
+        expanded: List[GraphicObject] = []
+        for obj in objects:
+            if (isinstance(obj, CompositeObject) and not obj.objects
+                    and obj.resource_id and obj.resource_id not in seen):
+                children_ = self.doc.composite_units.get(obj.resource_id)
+                if children_:
+                    instance = copy.deepcopy(obj)
+                    instance.objects = self._expand_composites(
+                        children_, seen | {obj.resource_id})
+                    expanded.append(instance)
+                    continue
+            expanded.append(obj)
+        return expanded
 
     def _parse_doc_info(self, body: ET.Element) -> None:
         info = child(body, "DocInfo")
@@ -270,6 +305,23 @@ class OfdParser:
             )
             if parsed_media.id:
                 self.doc.medias[parsed_media.id] = parsed_media
+
+        for unit in descendants(root, "CompositeGraphicUnit"):
+            unit_id = unit.get("ID", "")
+            if unit_id:
+                self.doc.composite_units[unit_id] = self._collect_objects(unit)
+
+    def _collect_objects(self, element: ET.Element) -> List[GraphicObject]:
+        """Gather the graphic objects below a composite graphic unit."""
+        objects: List[GraphicObject] = []
+        for node in element:
+            if local_name(node.tag) in ("Content", "PageBlock", "Layer"):
+                objects.extend(self._collect_objects(node))
+                continue
+            parsed = self._parse_object(node)
+            if parsed is not None:
+                objects.append(parsed)
+        return objects
 
     def _parse_draw_param(self, element: ET.Element) -> DrawParam:
         param = DrawParam(id=element.get("ID", ""))
@@ -356,6 +408,7 @@ class OfdParser:
         obj.boundary = parse_box(node.get("Boundary"))
         obj.ctm = parse_ctm(node.get("CTM"))
         obj.draw_param_id = node.get("DrawParam")
+        obj.resource_id = node.get("ResourceID", "")
         line_width = node.get("LineWidth")
         if line_width:
             try:
@@ -421,7 +474,6 @@ class OfdParser:
     def _parse_image(self, node: ET.Element) -> ImageObject:
         obj = ImageObject()
         self._parse_common_object(node, obj)
-        obj.resource_id = node.get("ResourceID", "")
         obj.image_mask = node.get("ImageMask")
         obj.substitution = node.get("Substitution")
         return obj

@@ -100,6 +100,7 @@ class GraphicObject:
     fill_color: Optional[Color] = None
     stroke_color: Optional[Color] = None
     rule: str = "NonZero"
+    resource_id: str = ""
 
 
 @dataclass
@@ -122,7 +123,6 @@ class PathObject(GraphicObject):
 
 @dataclass
 class ImageObject(GraphicObject):
-    resource_id: str = ""
     image_mask: Optional[str] = None
     substitution: Optional[str] = None
 
@@ -175,6 +175,7 @@ class Document:
     draw_params: Dict[str, DrawParam] = field(default_factory=dict)
     fonts: Dict[str, FontRes] = field(default_factory=dict)
     medias: Dict[str, MediaRes] = field(default_factory=dict)
+    composite_units: Dict[str, List["GraphicObject"]] = field(default_factory=dict)
     templates: Dict[str, Page] = field(default_factory=dict)
     pages: List[Page] = field(default_factory=list)
     attachments: List[Attachment] = field(default_factory=list)
