@@ -7,10 +7,15 @@
 将 OFD 文档（中国国家标准 GB/T 33190-2016，常用于电子发票、电子证照和公文）转换为 PDF。
 Convert OFD (GB/T 33190-2016) documents to PDF.
 
-**安装体积 / Install size:** 本项目自身的 wheel 仅 **40 KB**（解压后约 228 KB 的代码）；
-连同依赖 PyMuPDF 与 fonttools 一并安装，合计约 **71 MB**。
-The wheel itself is **40 KB** (228 KB of code); with PyMuPDF and fonttools the
-full install comes to roughly **71 MB**.
+**安装体积 / Install size:** 体积几乎都来自依赖，本项目自身只有一个 **40 KB** 的 wheel
+（安装后约 228 KB）。依赖中 PyMuPDF 约 22.8 MB（安装后 56 MB，主要是 MuPDF 原生库），
+fonttools 约 3 MB（安装后 15 MB，且是可选的）。所以全新安装约需下载 **26 MB**、占用
+**71 MB**；**如果你已经装了 PyMuPDF，本项目只增加 40 KB**。
+Nearly all of it is dependency, not this project: the wheel itself is **40 KB**
+(228 KB installed), PyMuPDF is 22.8 MB to download (56 MB on disk, mostly MuPDF's
+native libraries) and fonttools another 3 MB (15 MB, optional). A fresh install
+downloads about **26 MB** and occupies **71 MB**; if PyMuPDF is already there,
+this project adds just 40 KB.
 
 - 纯 Python，基于 [PyMuPDF](https://pymupdf.readthedocs.io/)
 - 提供命令行工具和 Python API
@@ -93,7 +98,10 @@ ofd2pdf --uninstall-finder-action --purge  # 同时卸载 Python 包
 pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # 安装指定版本
-pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.4.1"
+pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.5.0"
+
+# 需要 macOS 中文字体的常规字重（.ttc 字体集合），推荐
+pip install "fapiao-ofd2pdf[fonts] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # 需要支持不常见的图像格式时
 pip install "fapiao-ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
@@ -185,6 +193,10 @@ OFD 文档通常引用中文字体（宋体/SimSun、黑体/SimHei、楷体/KaiT
    Courier New、Times New Roman 等）；
 3. 中文文本优先使用常规字重的系统 CJK 字体（找不到时才用内置 CJK 字体），
    纯拉丁文本使用基础 14 号字体。
+
+macOS 的中文字体是 `.ttc` 字体集合（Songti.ttc、PingFang.ttc 等），而 MuPDF 只读取集合中的
+第一个字面——对 Songti 来说那是「黑体」，字面明显偏粗。因此建议安装 `[fonts]` 附加依赖
+（fontTools），由它挑出常规/细字面并缓存；未安装时会退回第一个字面，并提示一次。
 
 ### 限制
 
@@ -320,7 +332,10 @@ optional.
 pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # a specific release
-pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.4.1"
+pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.5.0"
+
+# recommended on macOS: regular-weight faces out of .ttc collections
+pip install "fapiao-ofd2pdf[fonts] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # with support for uncommon image formats
 pip install "fapiao-ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"

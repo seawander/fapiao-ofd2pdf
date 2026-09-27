@@ -4,16 +4,19 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fapiao-ofd2pdf"
-version = "0.4.1"
+version = "0.5.0"
 description = "Convert OFD (GB/T 33190) invoices and documents to PDF."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [{ name = "fapiao-ofd2pdf contributors" }]
 keywords = ["ofd", "pdf", "converter", "gb-t-33190"]
-dependencies = ["pymupdf>=1.24", "fonttools>=4.0"]
+dependencies = ["pymupdf>=1.24"]
 
 [project.optional-dependencies]
+# Picks the regular-weight face out of a .ttc/.otc collection (macOS CJK fonts);
+# without it such fonts fall back to their first, often very bold, face.
+fonts = ["fonttools>=4.0"]
 image = ["Pillow>=9"]
 dev = ["pytest>=7"]
 

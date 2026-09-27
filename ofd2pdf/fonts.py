@@ -109,9 +109,28 @@ def _normalize(name: str) -> str:
 # Font families we avoid by default so text is not rendered bold/black.
 _HEAVY_WEIGHTS = ("bold", "medium", "semibold", "black", "heavy", "ultra", "extrabold")
 
+_FONTTOOLS_WARNING = False
+
 
 def _weight_penalty(name: str) -> int:
     return 1 if any(weight in name for weight in _HEAVY_WEIGHTS) else 0
+
+
+def _warn_missing_fonttools() -> None:
+    """Tell the user once that CJK text may come out too bold."""
+    global _FONTTOOLS_WARNING
+    if _FONTTOOLS_WARNING:
+        return
+    _FONTTOOLS_WARNING = True
+    import warnings
+
+    warnings.warn(
+        "fontTools is not installed, so a TrueType collection (.ttc) falls back to "
+        "its first face and CJK text may render bold. Install the extra for regular "
+        'weights: pip install "fapiao-ofd2pdf[fonts]"',
+        RuntimeWarning,
+        stacklevel=3,
+    )
 
 
 def _extract_regular_face(path: Optional[str]) -> Optional[str]:
@@ -127,6 +146,7 @@ def _extract_regular_face(path: Optional[str]) -> Optional[str]:
     try:
         from fontTools.ttLib import TTCollection
     except Exception:
+        _warn_missing_fonttools()
         return path
     try:
         faces = TTCollection(path, lazy=True).fonts
