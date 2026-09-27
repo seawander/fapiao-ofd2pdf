@@ -60,7 +60,7 @@ def workflow_path() -> str:
 def converter_command() -> str:
     """Return the absolute command used to invoke the converter."""
 
-    executable = shutil.which("ofd2pdf")
+    executable = shutil.which("fapiao-ofd2pdf") or shutil.which("ofd2pdf")
     if executable:
         return shlex.quote(executable)
     return f"{shlex.quote(sys.executable)} -m ofd2pdf"

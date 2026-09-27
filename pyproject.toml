@@ -3,13 +3,13 @@ requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ofd2pdf"
-version = "0.3.2"
-description = "Convert OFD (GB/T 33190) documents to PDF."
+name = "fapiao-ofd2pdf"
+version = "0.4.0"
+description = "Convert OFD (GB/T 33190) invoices and documents to PDF."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
-authors = [{ name = "ofd2pdf contributors" }]
+authors = [{ name = "fapiao-ofd2pdf contributors" }]
 keywords = ["ofd", "pdf", "converter", "gb-t-33190"]
 dependencies = ["pymupdf>=1.24", "fonttools>=4.0"]
 
@@ -19,6 +19,7 @@ dev = ["pytest>=7"]
 
 [project.scripts]
 ofd2pdf = "ofd2pdf.cli:main"
+fapiao-ofd2pdf = "ofd2pdf.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["ofd2pdf*"]

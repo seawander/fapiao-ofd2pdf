@@ -1,4 +1,4 @@
-# ofd2pdf
+# fapiao-ofd2pdf
 
 [![CI](https://github.com/seawander/fapiao-ofd2pdf/actions/workflows/ci.yml/badge.svg)](https://github.com/seawander/fapiao-ofd2pdf/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -32,10 +32,10 @@ Convert OFD (GB/T 33190-2016) documents to PDF.
 
 ## 中文
 
-ofd2pdf 可以把 OFD 文件转换为 PDF。发票、行程单等常常以 OFD 下发，但当需要打印报销时，
+fapiao-ofd2pdf 可以把 OFD 文件转换为 PDF。发票、行程单等常常以 OFD 下发，但当需要打印报销时，
 没有 PDF 就很麻烦。
 
-这些文件又往往涉及个人隐私，你多半不愿意把它们上传到任何在线转换网站。ofd2pdf 完全
+这些文件又往往涉及个人隐私，你多半不愿意把它们上传到任何在线转换网站。fapiao-ofd2pdf 完全
 在本地运行：文件不离开你的电脑，不联网，也没有上传界面。
 
 有了 fapiao-ofd2pdf，在 macOS 上无需敲命令，双击即可。
@@ -88,10 +88,10 @@ ofd2pdf --uninstall-finder-action --purge  # 同时卸载 Python 包
 pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # 安装指定版本
-pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.3.2"
+pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.4.0"
 
 # 需要支持不常见的图像格式时
-pip install "ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
+pip install "fapiao-ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # 从本地源码安装
 git clone https://github.com/seawander/fapiao-ofd2pdf.git
@@ -99,7 +99,8 @@ cd ofd2pdf
 pip install .
 ```
 
-以上任一方式都会安装 `ofd2pdf` 命令。
+以上任一方式都会安装 `ofd2pdf` 命令（发行包名为 `fapiao-ofd2pdf`，`fapiao-ofd2pdf`
+是同一条命令的别名）。
 
 > macOS 提示： 访达集成会启动 `/Applications` 下的应用，而 macOS 会阻止它读取
 > 位于 `~/Documents` 下的*可编辑（editable）*安装。使用访达集成时请用 `pip install .`
@@ -252,12 +253,12 @@ MIT。本项目由 AI 辅助生成（OpenCode，模型为 DeepSeek V4.1 Flash �
 
 ## English
 
-ofd2pdf converts OFD files to PDF. Invoices and travel itineraries are often
+fapiao-ofd2pdf converts OFD files to PDF. Invoices and travel itineraries are often
 issued as OFD, but when you need to print one for reimbursement, having no PDF
 is a hassle.
 
 Those files are usually private as well, and you probably do not want to upload
-them to any online converter. ofd2pdf runs entirely on your own machine: nothing
+them to any online converter. fapiao-ofd2pdf runs entirely on your own machine: nothing
 leaves the computer, there is no network access, and no upload form anywhere.
 
 With fapiao-ofd2pdf, a double-click is all it takes on macOS — no commands needed.
@@ -314,10 +315,10 @@ optional.
 pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # a specific release
-pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.3.2"
+pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.4.0"
 
 # with support for uncommon image formats
-pip install "ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
+pip install "fapiao-ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # from a local checkout
 git clone https://github.com/seawander/fapiao-ofd2pdf.git
@@ -325,7 +326,8 @@ cd ofd2pdf
 pip install .
 ```
 
-Either way this installs the `ofd2pdf` command.
+Either way this installs the `ofd2pdf` command (the distribution is named
+`fapiao-ofd2pdf`, which is also installed as a command alias).
 
 > macOS note: the Finder integration launches an app in `/Applications`, and
 > macOS privacy protection stops it from importing an *editable* install that

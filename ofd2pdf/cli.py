@@ -25,7 +25,7 @@ def _output_for(input_path: str, output: Optional[str], multiple: bool) -> str:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="ofd2pdf",
+        prog=os.path.basename(sys.argv[0]) or "ofd2pdf",
         description="Convert OFD documents to PDF.",
     )
     parser.add_argument("inputs", nargs="*", help="input .ofd file(s)")
@@ -72,8 +72,9 @@ def _run_finder_action(args: argparse.Namespace) -> Optional[int]:
             print("macOS right-click integration was not installed.")
         if args.purge:
             print("Removing the Python package…")
-            subprocess.run([sys.executable, "-m", "pip", "uninstall", "-y", "ofd2pdf"],
-                           check=False)
+            for name in ("fapiao-ofd2pdf", "ofd2pdf"):
+                subprocess.run([sys.executable, "-m", "pip", "uninstall", "-y", name],
+                               check=False)
         else:
             print("To remove the Python package as well: "
                   "ofd2pdf --uninstall --purge")
