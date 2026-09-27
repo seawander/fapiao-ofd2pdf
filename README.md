@@ -5,7 +5,7 @@
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 
 将 OFD 文档（中国国家标准 GB/T 33190-2016，常用于电子发票、电子证照和公文）转换为 PDF。
-Convert **OFD** (GB/T 33190-2016) documents to **PDF**.
+Convert OFD (GB/T 33190-2016) documents to PDF.
 
 - 纯 Python，基于 [PyMuPDF](https://pymupdf.readthedocs.io/)
 - 提供命令行工具和 Python API
@@ -13,19 +13,16 @@ Convert **OFD** (GB/T 33190-2016) documents to **PDF**.
 
 [中文](#中文) | [English](#english)
 
-> 请将命令中的 `OWNER` 替换为托管本仓库的 GitHub 账号或组织。
-> Replace `OWNER` with the GitHub account or organisation hosting this repository.
-
 ## ⚠️ 免责声明 / Disclaimer
 
-> **本项目由 AI 辅助生成（使用 [OpenCode](https://opencode.ai) 与 DeepSeek V4.1 Flash 模型），未经专业审计或全面测试。**
+> 本项目由 AI 辅助生成（使用 [OpenCode](https://opencode.ai) 与 DeepSeek V4.1 Flash 模型），未经专业审计或全面测试。
 > 软件按「原样」提供，不提供任何明示或暗示的保证——包括但不限于正确性、完整性、
 > 适用性或安全性。请自行核对转换结果，尤其是发票、公文等具有法律或财务效力的文件。
 > 使用本软件所产生的任何风险与损失，由使用者自行承担。本项目与 OFD 标准的任何
 > 标准组织或厂商均无关联。
 >
-> **This project was generated with AI ([OpenCode](https://opencode.ai) + DeepSeek V4.1 Flash) and has not
-> been professionally audited or exhaustively tested.** It is provided "as is", without warranty of any kind,
+> This project was generated with AI ([OpenCode](https://opencode.ai) + DeepSeek V4.1 Flash) and has not
+> been professionally audited or exhaustively tested. It is provided "as is", without warranty of any kind,
 > express or implied — including correctness, completeness, fitness or security.
 > Verify the output yourself, especially for invoices or official documents that
 > carry legal or financial weight. Use it at your own risk. This project is not
@@ -35,7 +32,7 @@ Convert **OFD** (GB/T 33190-2016) documents to **PDF**.
 
 ## 中文
 
-**ofd2pdf** 可以把 **OFD** 文件转换为 **PDF**。大多数情况下，你只想打开一个 OFD
+ofd2pdf 可以把 OFD 文件转换为 PDF。大多数情况下，你只想打开一个 OFD
 文件——在 macOS 上无需敲命令，直接在访达里右键即可。
 
 [安装](#安装) · [命令行](#命令行) · [Python API](#python-api)
@@ -49,14 +46,14 @@ Convert **OFD** (GB/T 33190-2016) documents to **PDF**.
    ofd2pdf --install-finder-action
    ```
 
-2. 在访达中右键点击 `.ofd` 文件 → **打开方式** → **OFD to PDF**。
+2. 在访达中右键点击 `.ofd` 文件 → 打开方式 → OFD to PDF。
 
 PDF 会立即在查看器中打开，且不会在源文件旁另存文件。首次使用时，「OFD to PDF」可能
-藏在 **打开方式 → 其他…** 里，选择一次即可常驻菜单。若希望双击就打开，可在
-**显示简介 → 打开方式 → 全部更改…** 中设为默认。
+藏在 打开方式 → 其他… 里，选择一次即可常驻菜单。若希望双击就打开，可在
+显示简介 → 打开方式 → 全部更改… 中设为默认。
 
 如果 macOS 提示 *「Apple 无法验证……是否包含恶意软件」*，这是 Gatekeeper 在检查
-**从网上下载的**（带有隔离标记的）`.ofd` 文件。本工具的处理应用没有 Apple 公证
+从网上下载的（带有隔离标记的）`.ofd` 文件。本工具的处理应用没有 Apple 公证
 （notarization），因此这类文件会被拦下。清除文件的隔离标记即可不再提示：
 
 ```bash
@@ -99,7 +96,7 @@ pip install .
 
 以上任一方式都会安装 `ofd2pdf` 命令。
 
-> **macOS 提示：** 访达集成会启动 `/Applications` 下的应用，而 macOS 会阻止它读取
+> macOS 提示： 访达集成会启动 `/Applications` 下的应用，而 macOS 会阻止它读取
 > 位于 `~/Documents` 下的*可编辑（editable）*安装。使用右键集成时请用 `pip install .`
 > （而不是 `pip install -e .`），修改源码后重新安装一次。
 
@@ -184,14 +181,19 @@ OFD 文档通常引用中文字体（宋体/SimSun、黑体/SimHei、楷体/KaiT
 
 ### 常见问题
 
-**为什么访达里没有「快速操作」？**
+为什么访达里没有「快速操作」？
 在较新的 macOS 上，*快速操作*子菜单只由应用扩展和「快捷指令」填充，复制到
 `~/Library/Services` 的 Automator 工作流已不再显示。因此本工具改用「打开方式」中的
 文档处理应用，这是可靠的方式。
 
-**可以用 `pip install -e .` 吗？**
+可以用 `pip install -e .` 吗？
 开发时可以用。但若同时使用访达集成，请改用 `pip install .`，否则应用无法读取
 位于 `~/Documents` 下的可编辑安装。
+
+为什么会提示「Apple 无法验证……」？
+因为该 `.ofd` 是从网上下载的（带有隔离标记），而本工具的处理应用未经过 Apple 公证。
+清除隔离标记即可不再提示：`ofd2pdf --clear-quarantine <文件或文件夹>`。详见上文
+macOS 部分。
 
 ### 开发
 
@@ -236,7 +238,7 @@ MIT。本项目由 AI 辅助生成（OpenCode + DeepSeek V4.1 Flash），未经�
 
 ## English
 
-**ofd2pdf** converts **OFD** files to **PDF**. Most of the time you just want to
+ofd2pdf converts OFD files to PDF. Most of the time you just want to
 open an OFD — on macOS you can do that from Finder, no commands needed.
 
 [Installation](#installation) · [Command line](#command-line) · [Python API](#python-api)
@@ -250,15 +252,15 @@ open an OFD — on macOS you can do that from Finder, no commands needed.
    ofd2pdf --install-finder-action
    ```
 
-2. Right-click an `.ofd` file in Finder → **Open With** → **OFD to PDF**.
+2. Right-click an `.ofd` file in Finder → Open With → OFD to PDF.
 
 The PDF opens straight away in your viewer and is not saved next to the source.
-The first time, "OFD to PDF" may be under **Open With → Other…**; pick it once and
+The first time, "OFD to PDF" may be under Open With → Other…; pick it once and
 it stays on the menu. To open on double-click, use
-**Get Info → Open with → Change All…**.
+Get Info → Open with → Change All….
 
 If macOS says *"Apple could not verify … is free of malware"*, that is Gatekeeper
-checking a **downloaded** `.ofd` (one carrying the quarantine flag). This tool's
+checking a downloaded `.ofd` (one carrying the quarantine flag). This tool's
 helper app is not notarized by Apple, so such files are refused. Clear the flag
 and the warning stops:
 
@@ -270,7 +272,7 @@ ofd2pdf --clear-quarantine invoice.ofd            # …or a single file
 This is equivalent to `xattr -dr com.apple.quarantine <path>`. Newly downloaded
 files get the flag again, so re-run it (or convert from the command line with
 `ofd2pdf invoice.ofd --open`, which never triggers the prompt). The dialog itself
-is harmless; dismiss it with **Done**.
+is harmless; dismiss it with Done.
 
 Uninstall the integration:
 
@@ -304,7 +306,7 @@ pip install .
 
 Either way this installs the `ofd2pdf` command.
 
-> **macOS note:** the Finder integration launches an app in `/Applications`, and
+> macOS note: the Finder integration launches an app in `/Applications`, and
 > macOS privacy protection stops it from importing an *editable* install that
 > lives under `~/Documents`. Use `pip install .` (not `pip install -e .`) when
 > you rely on the Finder integration, and re-install after editing the source.
@@ -394,16 +396,21 @@ OFD documents usually reference Chinese fonts (宋体/SimSun, 黑体/SimHei,
 
 ### FAQ
 
-**Why is there no "Quick Actions" entry?**
+Why is there no "Quick Actions" entry?
 On recent macOS the *Quick Actions* submenu is populated only from app extensions
 and Shortcuts; Automator workflows copied to `~/Library/Services` are no longer
 shown there. That is why this project uses a document handler app under
 "Open With", which is reliable.
 
-**Can I use `pip install -e .`?**
+Can I use `pip install -e .`?
 Yes, for development. But if you also use the Finder integration, use
 `pip install .` instead — otherwise the app cannot import an editable install
 that lives under `~/Documents`.
+
+Why does it say "Apple could not verify …"?
+The `.ofd` was downloaded (it carries the quarantine flag) and the helper app is
+not notarized by Apple. Clear the flag with
+`ofd2pdf --clear-quarantine <file-or-folder>` — see the macOS section above.
 
 ### Development
 
