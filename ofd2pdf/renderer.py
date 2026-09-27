@@ -371,11 +371,16 @@ class PdfRenderer:
                 if character not in (" ", "\u3000"):
                     # Compress a glyph whose natural width exceeds the advance the
                     # document gives it (e.g. proportional Latin in a CJK font asked
-                    # to be half width), so glyphs never overlap.
+                    # to be half width), so glyphs never overlap.  Only applies when
+                    # there is an explicit advance and a following glyph: the last
+                    # glyph of a run has no width constraint.
                     fit = 1.0
-                    if (natural_mm and abs(step_x) > 1e-9
-                            and natural_mm > abs(step_x) * 1.001):
-                        fit = abs(step_x) / natural_mm
+                    if (has_delta and i < len(code.delta_x)
+                            and i < len(code.text) - 1
+                            and natural_mm and abs(step_x) > 1e-9):
+                        natural_eff = natural_mm * hscale
+                        if natural_eff > abs(step_x) * 1.001:
+                            fit = abs(step_x) / natural_eff
                     glyph = compose(linear, (cos_theta * hscale * fit,
                                              sin_theta * hscale * fit,
                                              -sin_theta, cos_theta, 0.0, 0.0))
