@@ -53,18 +53,18 @@ FONT_ALIASES: Dict[str, List[str]] = {
     "宋体": ["Songti SC", "Songti", "STSong", "SimSun", "Noto Serif CJK SC"],
     "simsun": ["SimSun", "Songti", "STSong", "Noto Serif CJK SC"],
     "新宋体": ["SimSun", "Songti", "Noto Serif CJK SC"],
-    "黑体": ["STHeiti Medium", "Heiti SC", "SimHei", "STHeiti", "Noto Sans CJK SC"],
-    "simhei": ["SimHei", "STHeiti Medium", "Noto Sans CJK SC"],
-    "楷体": ["Kaiti SC", "STKaiti", "KaiTi", "Noto Serif CJK SC"],
-    "kaiti": ["KaiTi", "Kaiti SC", "STKaiti"],
-    "仿宋": ["STFangsong", "FangSong", "Noto Serif CJK SC"],
+    "黑体": ["PingFang SC", "STHeiti Light", "Heiti SC", "SimHei", "Noto Sans CJK SC"],
+    "simhei": ["SimHei", "PingFang SC", "STHeiti Light", "Noto Sans CJK SC"],
+    "楷体": ["Kaiti SC", "STKaiti", "KaiTi", "PingFang SC", "STHeiti Light"],
+    "kaiti": ["KaiTi", "Kaiti SC", "STKaiti", "STHeiti Light"],
+    "仿宋": ["STFangsong", "FangSong", "Songti SC", "Noto Serif CJK SC"],
     "仿宋_gb2312": ["STFangsong", "FangSong"],
-    "微软雅黑": ["Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC"],
-    "微软雅黑light": ["Microsoft YaHei", "PingFang SC"],
-    "等线": ["DengXian", "PingFang SC"],
+    "微软雅黑": ["Microsoft YaHei", "PingFang SC", "STHeiti Light", "Noto Sans CJK SC"],
+    "微软雅黑light": ["Microsoft YaHei", "PingFang SC", "STHeiti Light"],
+    "等线": ["DengXian", "PingFang SC", "STHeiti Light"],
     "方正书宋": ["Songti SC", "Songti", "Noto Serif CJK SC"],
-    "方正黑体": ["STHeiti Medium", "Heiti SC", "Noto Sans CJK SC"],
-    "方正楷体": ["Kaiti SC", "STKaiti"],
+    "方正黑体": ["PingFang SC", "STHeiti Light", "Heiti SC", "Noto Sans CJK SC"],
+    "方正楷体": ["Kaiti SC", "STKaiti", "STHeiti Light"],
     "times new roman": ["Times New Roman", "Times"],
     "times": ["Times", "Times New Roman"],
     "courier new": ["Courier New", "Courier"],
@@ -101,6 +101,14 @@ def has_cjk(text: str) -> bool:
 
 def _normalize(name: str) -> str:
     return re.sub(r"[^a-z0-9]", "", name.lower())
+
+
+# Font families we avoid by default so text is not rendered bold/black.
+_HEAVY_WEIGHTS = ("bold", "medium", "semibold", "black", "heavy", "ultra", "extrabold")
+
+
+def _weight_penalty(name: str) -> int:
+    return 1 if any(weight in name for weight in _HEAVY_WEIGHTS) else 0
 
 
 @dataclass
@@ -146,9 +154,15 @@ class SystemFontIndex:
             key = _normalize(candidate)
             if not key:
                 continue
-            for indexed_key, path in self._index.items():
-                if key in indexed_key or indexed_key in key:
-                    return path
+            matches = [
+                (indexed_key, path)
+                for indexed_key, path in self._index.items()
+                if key in indexed_key or indexed_key in key
+            ]
+            if matches:
+                # Prefer a regular/light face over a bold/medium one.
+                matches.sort(key=lambda item: _weight_penalty(item[0]))
+                return matches[0][1]
         return None
 
 
