@@ -112,17 +112,15 @@ def parse_delta_array(value: Optional[str]) -> List[float]:
             except ValueError:
                 break
             index += 1
-            pattern: List[float] = []
-            while index < len(tokens) and tokens[index] not in ("g", "G"):
-                try:
-                    pattern.append(float(tokens[index]))
-                except ValueError:
-                    pass
-                index += 1
-            if not pattern:
-                continue
-            for step in range(count):
-                result.append(pattern[step % len(pattern)])
+            if index >= len(tokens):
+                break
+            try:
+                repeated = float(tokens[index])
+            except ValueError:
+                break
+            index += 1
+            if count > 0:
+                result.extend([repeated] * count)
         else:
             try:
                 result.append(float(token))

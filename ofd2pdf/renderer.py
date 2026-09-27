@@ -332,15 +332,21 @@ class PdfRenderer:
         char_direction = obj.char_direction % 360
         theta = math.radians(char_direction)
         cos_theta, sin_theta = math.cos(theta), math.sin(theta)
-        use_morph = abs(hscale - 1.0) > 1e-9 or char_direction != 0
-        morph_matrix = fitz.Matrix(cos_theta * hscale, sin_theta * hscale,
-                                   -sin_theta, cos_theta, 0, 0)
+        rot_scale = (cos_theta * hscale, sin_theta * hscale,
+                     -sin_theta, cos_theta, 0.0, 0.0)
 
         read_phi = math.radians(obj.read_direction)
         cos_read, sin_read = math.cos(read_phi), math.sin(read_phi)
         metric_font = _metrics_font(font)
 
         matrix = compose(parent, self._object_matrix(obj))
+        # Glyph outlines must be transformed by the object's CTM (and any parent
+        # transform), not just their positions -- otherwise a scaling CTM leaves
+        # the advances scaled but the glyphs full width, so they overlap.
+        linear = (matrix[0], matrix[1], matrix[2], matrix[3], 0.0, 0.0)
+        glyph = compose(linear, rot_scale)
+        use_morph = any(abs(glyph[i] - IDENTITY[i]) > 1e-9 for i in range(4))
+        morph_matrix = fitz.Matrix(glyph[0], glyph[1], glyph[2], glyph[3], 0, 0)
         for code in obj.codes:
             has_delta = bool(code.delta_x) or bool(code.delta_y)
             cursor_x = code.x

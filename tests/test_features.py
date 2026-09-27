@@ -26,6 +26,19 @@ def _document(layer: Layer) -> Document:
     return document
 
 
+def test_parse_delta_array_g_repeat():
+    from ofd2pdf.parser import parse_delta_array
+
+    # `g N v` repeats the single following value N times.
+    assert parse_delta_array("g 9 7.07") == [7.07] * 9
+    assert parse_delta_array("g 4 1.585 3.17 g 2 1.585 3.17 g 2 1.585") == [
+        1.585, 1.585, 1.585, 1.585, 3.17, 1.585, 1.585, 3.17, 1.585, 1.585,
+    ]
+    assert parse_delta_array("1.59 g 6 3.18 1.59 g 3 3.18") == [
+        1.59, 3.18, 3.18, 3.18, 3.18, 3.18, 3.18, 1.59, 3.18, 3.18, 3.18,
+    ]
+
+
 def test_text_directions_and_hscale_render():
     layer = Layer(type="Body")
     layer.objects.append(TextObject(
