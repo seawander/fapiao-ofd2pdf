@@ -1,5 +1,9 @@
 # ofd2pdf
 
+[![CI](https://github.com/seawander/fapiao-ofd2pdf/actions/workflows/ci.yml/badge.svg)](https://github.com/seawander/fapiao-ofd2pdf/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
+
 将 OFD 文档（中国国家标准 GB/T 33190-2016，常用于电子发票、电子证照和公文）转换为 PDF。
 Convert **OFD** (GB/T 33190-2016) documents to **PDF**.
 

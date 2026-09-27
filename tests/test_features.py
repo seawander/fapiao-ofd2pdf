@@ -121,6 +121,8 @@ def test_macos_clean_uninstall(tmp_path, monkeypatch):
 
 
 def test_macos_workflow_install_and_uninstall(tmp_path, monkeypatch):
+    if not macos.is_supported():
+        pytest.skip("macOS only")
     monkeypatch.setattr(macos, "SERVICES_DIR", str(tmp_path))
     monkeypatch.setattr(macos, "refresh_services", lambda: None)
 
