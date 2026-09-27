@@ -331,13 +331,23 @@ class OfdParser:
                 param.line_width = float(line_width)
             except ValueError:
                 pass
-        param.dash_pattern = parse_array(element.get("DashPattern"))
-        dash_offset = element.get("DashOffset")
-        if dash_offset:
+        # CT_DashPattern is a child element carrying Array/Offset (a DashOffset
+        # attribute on the DrawParam itself is accepted as a fallback).
+        dash_pattern = child(element, "DashPattern")
+        if dash_pattern is not None:
+            param.dash_pattern = tuple(parse_floats(dash_pattern.get("Array")))
             try:
-                param.dash_offset = float(dash_offset)
+                param.dash_offset = float(dash_pattern.get("Offset", "") or 0.0)
             except ValueError:
                 pass
+        else:
+            param.dash_pattern = parse_array(element.get("DashPattern"))
+            dash_offset = element.get("DashOffset")
+            if dash_offset:
+                try:
+                    param.dash_offset = float(dash_offset)
+                except ValueError:
+                    pass
         param.cap = element.get("Cap", "Butt")
         param.join = element.get("Join", "Miter")
         miter = element.get("MiterLimit")

@@ -358,15 +358,26 @@ class PdfRenderer:
                         natural_mm = None
 
                 if has_delta:
-                    step_x = code.delta_x[i] if i < len(code.delta_x) else advance_x
-                    step_y = code.delta_y[i] if i < len(code.delta_y) else advance_y
+                    base = code.delta_x[i] if i < len(code.delta_x) else advance_x
+                    offset = code.delta_y[i] if i < len(code.delta_y) else advance_y
                 elif natural_mm is not None:
-                    step_x = natural_mm * cos_read * hscale
-                    step_y = natural_mm * sin_read
+                    base = natural_mm * hscale
+                    offset = 0.0
                 else:
-                    advance_mm = fontsize / MM2PT
-                    step_x = advance_mm * cos_read * hscale
-                    step_y = advance_mm * sin_read
+                    base = (fontsize / MM2PT) * hscale
+                    offset = 0.0
+
+                # `DeltaX` is the advance along the baseline, so the reading and
+                # character directions turn it: ReadDirection 90 reads
+                # bottom-to-top, 180 right-to-left, 270 top-to-bottom, and
+                # CharDirection slants the run.  Previously an explicit DeltaX
+                # ignored both, so `ReadDirection="90"` (the usual encoding of
+                # rotated text) came out horizontal and slanted text overlapped.
+                # `DeltaY` stays a page-axis offset, which is how vertical runs
+                # step from glyph to glyph.
+                phi = read_phi + theta
+                step_x = base * math.cos(phi)
+                step_y = -base * math.sin(phi) + offset
 
                 if character not in (" ", "\u3000"):
                     # Compress a glyph whose natural width exceeds the advance the
@@ -377,10 +388,10 @@ class PdfRenderer:
                     fit = 1.0
                     if (has_delta and i < len(code.delta_x)
                             and i < len(code.text) - 1
-                            and natural_mm and abs(step_x) > 1e-9):
+                            and natural_mm and abs(base) > 1e-9):
                         natural_eff = natural_mm * hscale
-                        if natural_eff > abs(step_x) * 1.001:
-                            fit = abs(step_x) / natural_eff
+                        if natural_eff > abs(base) * 1.001:
+                            fit = abs(base) / natural_eff
                     glyph = compose(linear, (cos_theta * hscale * fit,
                                              sin_theta * hscale * fit,
                                              -sin_theta, cos_theta, 0.0, 0.0))

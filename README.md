@@ -32,11 +32,11 @@ Convert OFD (GB/T 33190-2016) documents to PDF.
 
 ## 中文
 
-ofd2pdf 可以把 OFD 文件转换为 PDF。发票、报销单、证照等常常以 OFD 下发，但很多单位
-只收 PDF——打印报销时，没有 PDF 就很麻烦。
+ofd2pdf 可以把 OFD 文件转换为 PDF。发票、行程单等常常以 OFD 下发，但当需要打印报销时，
+没有 PDF 就很麻烦。
 
-另一方面，发票和身份证件属于个人隐私，你多半不愿意把它们上传到任何在线转换网站。
-ofd2pdf 完全在本地运行：文件不离开你的电脑，不联网，也没有上传界面。
+这些文件又往往涉及个人隐私，你多半不愿意把它们上传到任何在线转换网站。ofd2pdf 完全
+在本地运行：文件不离开你的电脑，不联网，也没有上传界面。
 
 大多数情况下，你只想打开一个 OFD 文件看看内容或打印出来——在 macOS 上无需敲命令，
 在访达里双击即可。
@@ -89,7 +89,7 @@ ofd2pdf --uninstall-finder-action --purge  # 同时卸载 Python 包
 pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # 安装指定版本
-pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.3.1"
+pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.3.2"
 
 # 需要支持不常见的图像格式时
 pip install "ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
@@ -186,6 +186,8 @@ OFD 文档通常引用中文字体（宋体/SimSun、黑体/SimHei、楷体/KaiT
 - 色彩管理为简化实现（不支持 ICC 配置文件）。
 - 仅渲染包含绘制内容的注释外观；以独立签名图像呈现的电子签章不会校验或重绘。
 - 不支持文本重排/编辑——输出为固定版式的还原结果。
+- 图像按 `ImageObject` 的 `Boundary` 定位，不套用其 `CTM`（实际发票中的 `CTM`
+  多为缩放值，已包含在 `Boundary` 里；旋转图像暂不支持）。
 
 ### 常见问题
 
@@ -233,7 +235,12 @@ ofd2pdf/
 ```
 
 > 测试样本由脚本从零生成（假发票、合成图像、无真实数据）。可随时运行
-> `python tests/make_sample.py` 重新生成。
+> `python tests/make_sample.py` 重新生成。样本共两页（150×100 mm 与 120×70 mm），
+> 覆盖前后景模板、页内资源、`g` 重复 advance、`\XXXX` 转义、`HScale`、
+> `ReadDirection` 90/180/270、`CharDirection` 斜排、`DeltaY` 竖排、描边文字、
+> 透明填充、`cmyk` 颜色、虚线与圆头圆角、偶奇填充甜甜圈、贝塞尔与椭圆弧、
+> 嵌套 `CompositeObject` 与按 `ResourceID` 引用的 `CompositeGraphicUnit` 印章、
+> `ImageMask` 图像、两页注释外观、元数据与内嵌附件。
 
 贡献指南见 [CONTRIBUTING.md](CONTRIBUTING.md)，安全问题请按 [SECURITY.md](SECURITY.md) 反馈。
 
@@ -246,14 +253,13 @@ MIT。本项目由 AI 辅助生成（OpenCode，模型为 DeepSeek V4.1 Flash �
 
 ## English
 
-ofd2pdf converts OFD files to PDF. Invoices, expense claims and licences are
-often issued as OFD, while many organisations only accept PDF — without one,
-printing for reimbursement is a hassle.
+ofd2pdf converts OFD files to PDF. Invoices and travel itineraries are often
+issued as OFD, but when you need to print one for reimbursement, having no PDF
+is a hassle.
 
-At the same time, invoices and ID documents are private, and you probably do not
-want to upload them to any online converter. ofd2pdf runs entirely on your own
-machine: nothing leaves the computer, there is no network access, and no upload
-form anywhere.
+Those files are usually private as well, and you probably do not want to upload
+them to any online converter. ofd2pdf runs entirely on your own machine: nothing
+leaves the computer, there is no network access, and no upload form anywhere.
 
 Most of the time you just want to open an OFD to look at it, or to print it — on
 macOS that is a double-click in Finder, no commands needed.
@@ -310,7 +316,7 @@ optional.
 pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git"
 
 # a specific release
-pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.3.1"
+pip install "git+https://github.com/seawander/fapiao-ofd2pdf.git@v0.3.2"
 
 # with support for uncommon image formats
 pip install "ofd2pdf[image] @ git+https://github.com/seawander/fapiao-ofd2pdf.git"
@@ -413,6 +419,9 @@ OFD documents usually reference Chinese fonts (宋体/SimSun, 黑体/SimHei,
   signatures whose visual is carried by a separate signature image are not
   verified or redrawn.
 - No text reflow/editing — the output is a fixed-layout reproduction.
+- Images are placed by the `ImageObject` `Boundary`; its `CTM` is not applied
+  (in real invoices the `CTM` is a scale the `Boundary` already reflects, and
+  rotated images are not supported).
 
 ### FAQ
 
@@ -461,6 +470,15 @@ ofd2pdf/
 └── README.md
 ```
 
+> The fixture spans two pages (150x100 mm and 120x70 mm) and exercises the
+> renderer end to end: front/back templates, page-local resources, `g` repeat
+> advances, `\XXXX` escapes, `HScale`, `ReadDirection` 90/180/270, slanted
+> `CharDirection`, a `DeltaY` vertical run, stroke-only text, alpha fill, `cmyk`
+> colour, dashes with round caps/joins, an `Even-Odd` donut, bezier and elliptical
+> arcs, a nested `CompositeObject` plus a `ResourceID`-referenced
+> `CompositeGraphicUnit` seal, an `ImageMask`, annotation appearances on both
+> pages, metadata and embedded attachments.
+>
 > The test fixture is generated from scratch (fake invoice, synthetic image,
 > no real data). Regenerate it any time with `python tests/make_sample.py`.
 
