@@ -11,11 +11,11 @@ Convert OFD (GB/T 33190-2016) documents to PDF.
 （pip 下载的 `.whl` 文件，安装后约 228 KB），体积几乎都来自它用到的其他软件：PyMuPDF 约
 22.8 MB（安装后 56 MB，主要是 MuPDF 原生库），fontTools 约 3 MB（安装后 15 MB，可选）。
 所以全新安装约需下载 26 MB、占用 71 MB；如果你已经装了 PyMuPDF，本项目只增加 40 KB。
-The rest is the software it uses: PyMuPDF is 22.8 MB to fetch (56 MB on disk,
-mostly MuPDF's native libraries) and fontTools another 3 MB (15 MB, optional).
 This project itself is **40 KB** to download (a single `.whl` file, 228 KB
-installed). A fresh install downloads about 26 MB and occupies 71 MB; if PyMuPDF
-is already there, this project adds just 40 KB.
+installed); nearly all of the rest is the software it uses — PyMuPDF is 22.8 MB
+to fetch (56 MB on disk, mostly MuPDF's native libraries) and fontTools another
+3 MB (15 MB, optional). A fresh install therefore downloads about 26 MB and
+occupies 71 MB; if PyMuPDF is already there, this project adds just 40 KB.
 
 - 纯 Python，基于 [PyMuPDF](https://pymupdf.readthedocs.io/)
 - 提供命令行工具和 Python API
@@ -115,7 +115,7 @@ pip install .
 以上任一方式都会安装 `ofd2pdf` 命令（发行包名为 `fapiao-ofd2pdf`，`fapiao-ofd2pdf`
 是同一条命令的别名）。
 
-> macOS 提示： 访达集成会启动 `/Applications` 下的应用，而 macOS 会阻止它读取
+> macOS 提示：访达集成会启动 `/Applications` 下的应用，而 macOS 会阻止它读取
 > 位于 `~/Documents` 下的*可编辑（editable）*安装。使用访达集成时请用 `pip install .`
 > （而不是 `pip install -e .`），修改源码后重新安装一次。
 
@@ -432,6 +432,12 @@ OFD documents usually reference Chinese fonts (宋体/SimSun, 黑体/SimHei,
    Courier New, Times New Roman, …);
 3. a regular-weight system CJK font for CJK text (falling back to the built-in
    CJK font), or a base-14 font for Latin-only text.
+
+Chinese fonts on macOS ship as `.ttc` collections (Songti.ttc, PingFang.ttc, …) —
+one file holding several fonts. MuPDF reads only the first of them, which for
+Songti is the Black weight and looks noticeably heavy. So install the `[fonts]`
+extra (fontTools): it picks the regular or light one and caches it; without the
+extra the first font is used and you get a one-time notice.
 
 ### Limitations
 
