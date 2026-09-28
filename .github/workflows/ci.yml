@@ -12,7 +12,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        # Pinned: ubuntu-latest migrates to Ubuntu 26 on 2026-10-19, which
+        # would change the environment without any change on our side.
+        os: [ubuntu-24.04, macos-latest]
         python-version: ["3.9", "3.12"]
     steps:
       - uses: actions/checkout@v7
