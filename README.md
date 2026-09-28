@@ -7,14 +7,14 @@
 将 OFD 文档（中国国家标准 GB/T 33190-2016，常用于电子发票、电子证照和公文）转换为 PDF。
 Convert OFD (GB/T 33190-2016) documents to PDF.
 
-**安装体积 / Install size:** 体积几乎都来自依赖，本项目自身只有一个 **40 KB** 的安装包
-（pip 下载的 `.whl` 文件，安装后约 228 KB）。依赖中 PyMuPDF 约 22.8 MB
-（安装后 56 MB，主要是 MuPDF 原生库），fonttools 约 3 MB（安装后 15 MB，且是可选的）。
+**安装体积 / Install size:** 本项目自身只有一个 **40 KB** 的安装包
+（pip 下载的 `.whl` 文件，安装后约 228 KB），体积几乎都来自它用到的其他软件：PyMuPDF 约
+22.8 MB（安装后 56 MB，主要是 MuPDF 原生库），fontTools 约 3 MB（安装后 15 MB，可选）。
 所以全新安装约需下载 26 MB、占用 71 MB；如果你已经装了 PyMuPDF，本项目只增加 40 KB。
-Nearly all of it is dependency, not this project: the download itself is **40 KB**
-(a single `.whl` file, 228 KB installed), PyMuPDF is 22.8 MB to fetch (56 MB on
-disk, mostly MuPDF's native libraries) and fonttools another 3 MB (15 MB,
-optional). A fresh install downloads about 26 MB and occupies 71 MB; if PyMuPDF
+The rest is the software it uses: PyMuPDF is 22.8 MB to fetch (56 MB on disk,
+mostly MuPDF's native libraries) and fontTools another 3 MB (15 MB, optional).
+This project itself is **40 KB** to download (a single `.whl` file, 228 KB
+installed). A fresh install downloads about 26 MB and occupies 71 MB; if PyMuPDF
 is already there, this project adds just 40 KB.
 
 - 纯 Python，基于 [PyMuPDF](https://pymupdf.readthedocs.io/)
@@ -195,7 +195,7 @@ OFD 文档通常引用中文字体（宋体/SimSun、黑体/SimHei、楷体/KaiT
    纯拉丁文本使用基础 14 号字体。
 
 macOS 的中文字体是 `.ttc` 字体集合（Songti.ttc、PingFang.ttc 等），而 MuPDF 只读取集合中的
-第一个字面——对 Songti 来说那是「黑体」，字面明显偏粗。因此建议安装 `[fonts]` 附加依赖
+第一个字面——对 Songti 来说那是「黑体」，字面明显偏粗。因此建议安装 `[fonts]` 可选组件
 （fontTools），由它挑出常规/细字面并缓存；未安装时会退回第一个字面，并提示一次。
 
 ### 限制
